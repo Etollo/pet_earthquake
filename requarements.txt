@@ -1,0 +1,2 @@
+apache-airflow==2.11.1
+duckdb==1.4.4
