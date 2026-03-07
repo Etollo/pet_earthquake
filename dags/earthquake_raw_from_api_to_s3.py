@@ -1,5 +1,5 @@
 import logging
-
+import sys
 import duckdb
 import pendulum
 
@@ -7,6 +7,8 @@ from airflow import DAG
 from airflow.models import Variable
 from airflow.operators.empty import EmptyOperator
 from airflow.operators.python import PythonOperator
+
+from lib.utils.util import get_dates
 
 # Конфигурация DAG
 OWNER = "ekharitonov"
@@ -24,19 +26,11 @@ DESCRIPTION = "Данные о землетрясениях"
 
 args = {
     "owner": OWNER,
-    "start_date": pendulum.datetime(2026, 3, 1, tz="Europe/Mpscow"),
+    "start_date": pendulum.datetime(2026, 3, 1, tz="Europe/Moscow"),
     "catchup": True,
     "retries": 3,
     "retry_delay": pendulum.duration(hours=1),
 }
-
-
-def get_dates(**context) -> tuple[str, str]:
-    """"""
-    start_date = context["data_interval_start"].format("YYYY-MM-DD")
-    end_date = context["data_interval_end"].format("YYYY-MM-DD")
-
-    return start_date, end_date
 
 
 def get_and_transfer_api_data_to_s3(**context):
