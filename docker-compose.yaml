@@ -330,6 +330,25 @@ services:
         condition: service_healthy
     restart: always
 
+  # version: "3.8"
+  jupyter:
+    image: jupyter/datascience-notebook:latest  # or jupyter/scipy-notebook
+    container_name: jupyter
+    ports:
+      - "8888:8888"
+    volumes:
+      - ./notebooks:/home/jovyan/work
+    environment:
+      - JUPYTER_ENABLE_LAB=lab
+      - JUPYTER_TOKEN=labpass
+      - POSTGRES_USER=dwh
+      - POSTGRES_PASSWORD=dwh
+      - POSTGRES_DB=dwh
+      - MINIO_ROOT_USER=minioadmin
+      - MINIO_ROOT_PASSWORD=minioadmin
+      - AIRFLOW_URL=http://airflow-apiserver:8080  # access token (acts like a password)
+    restart: unless-stopped
+
 volumes:  
   postgres-db-volume:
   minio-data:
